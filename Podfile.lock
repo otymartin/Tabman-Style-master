@@ -1,0 +1,40 @@
+PODS:
+  - AutoInsetter (1.5.1)
+  - Interpolate (1.2.1)
+  - Pageboy (3.0.7)
+  - SnapKit (4.2.0)
+  - SwiftyBeaver (1.6.2)
+  - SwiftyTimer (2.1.0)
+  - Tabman (2.1.4):
+    - AutoInsetter (~> 1.5)
+    - Pageboy (~> 3.0)
+
+DEPENDENCIES:
+  - Interpolate
+  - SnapKit
+  - SwiftyBeaver
+  - SwiftyTimer
+  - Tabman
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - AutoInsetter
+    - Interpolate
+    - Pageboy
+    - SnapKit
+    - SwiftyBeaver
+    - SwiftyTimer
+    - Tabman
+
+SPEC CHECKSUMS:
+  AutoInsetter: 249b103e316d5a9f2c7b88193e966f59bc1aa7b2
+  Interpolate: c786b88ad860c7110d606ae2776fad616e2b3724
+  Pageboy: 8210fff0db9dd487f58dc9769d5d046f2618ebe0
+  SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
+  SwiftyBeaver: 8e67ab3cd94389cbbb7a9c7cc02748d98bfee68e
+  SwiftyTimer: 02dd6cf10cbc71cbf67cec494f6e5eb782102543
+  Tabman: f8a6a1967312077334631d2f67010fe905a545f1
+
+PODFILE CHECKSUM: fa3eb5ebe2460bdeeecc9731ba42042d0c097cfd
+
+COCOAPODS: 1.6.0.beta.2
