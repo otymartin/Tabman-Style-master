@@ -8,13 +8,22 @@
 
 import UIKit
 
-open class PageViewController: UIViewController {
+public class PageViewController: UIViewController {
     
-    var page: TabPage?
+    public let page: TabPage
+    
+    public init(page: TabPage) {
+        self.page = page
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required public init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     open override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = self.page?.title ?? ""
-        self.view.backgroundColor = self.page?.color ?? .white
+        self.title = page.title
+        self.view.backgroundColor = page.color
     }
 }

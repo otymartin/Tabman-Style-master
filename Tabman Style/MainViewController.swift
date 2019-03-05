@@ -13,7 +13,7 @@ import SnapKit
 import SwiftyTimer
 import Interpolate
 
-open class BaseMainViewController: TabmanViewController, TabViewDelegate {
+open class MainViewController: TabmanViewController, TabViewDelegate {
     
     let tabView = TabView(frame: .zero)
     
@@ -21,10 +21,11 @@ open class BaseMainViewController: TabmanViewController, TabViewDelegate {
     
     override open func viewDidLoad() {
         super.viewDidLoad()
-        addTabView()
         loadViewControllers()
-        dataSource = self
         tabView.delegate = self
+        dataSource = self
+        addTabView()
+        isScrollEnabled = true
     }
     
     
@@ -52,24 +53,10 @@ open class BaseMainViewController: TabmanViewController, TabViewDelegate {
     }
 }
 
-public func iterateEnum<T: Hashable>(_: T.Type) -> AnyIterator<T> {
-    var i = 0
-    return AnyIterator {
-        let next = withUnsafeBytes(of: &i) { $0.load(as: T.self) }
-        if next.hashValue != i { return nil }
-        i += 1
-        return next
-    }
-}
-
-extension BaseMainViewController: PageboyViewControllerDataSource {
+extension MainViewController: PageboyViewControllerDataSource {
     
     func loadViewControllers() {
-        for page in iterateEnum(TabPage.self) {
-            let pageViewController = PageViewController()
-            pageViewController.page = page
-            viewControllers.append(pageViewController)
-        }
+        viewControllers = TabPage.allCases.map { PageViewController(page: $0) }
     }
     
     public func numberOfViewControllers(in pageboyViewController: PageboyViewController) -> Int {
@@ -81,7 +68,7 @@ extension BaseMainViewController: PageboyViewControllerDataSource {
     }
     
     public func defaultPage(for pageboyViewController: PageboyViewController) -> PageboyViewController.Page? {
-        return Page.at(index: 1)
+        return Page.at(index: 2)
     }
 }
 

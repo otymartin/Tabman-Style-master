@@ -16,9 +16,8 @@
 
 import UIKit
 import Pageboy
-import Interpolate
 
-public enum TabPage {
+public enum TabPage: CaseIterable {
     case one
     case two
     case three
@@ -76,6 +75,23 @@ public enum TabPage {
         }
     }
     
+    public enum Text {
+        case hidden
+        case faded
+        case visible
+        
+        public var color: UIColor {
+            switch self {
+            case .hidden:
+                return .clear
+            case .faded:
+               return UIColor.black.withAlphaComponent(0.4)
+            case .visible:
+                return .black
+            }
+        }
+    }
+    
     public var hidden: UIColor {
         return .clear
     }
@@ -91,7 +107,6 @@ public enum TabPage {
 
 import UIKit
 import Pageboy
-import Interpolate
 
 protocol TabButtonDelegate: class {
     
@@ -99,41 +114,114 @@ protocol TabButtonDelegate: class {
 }
 
 final class TabButton: UIButton {
-
+    
     public weak var delegate: TabButtonDelegate?
     
-    public var title: String = "" {
+    public var buttonPage: TabPage = .one {
         didSet {
-            self.setTitle(self.title, for: .normal)
+            setTitle(buttonPage.title, for: .normal)
         }
     }
     
-    public var page: TabPage = .one
-    
-    public override init(frame: CGRect) {
+    override init(frame: CGRect) {
         super.init(frame: frame)
-        self.configure()
+        configure()
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        self.configure()
+    required public init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
+
 }
 
 extension TabButton {
     
     private func configure() {
-        self.setTitleColor(.black, for: .normal)
-        self.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .heavy)
-        self.addTarget(self, action: #selector(self.Tap), for: .touchUpInside)
+        setTitleColor(.black, for: .normal)
+        setTitleColor(buttonPage.initialTextColor, for: .normal)
+        titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .heavy)
+        addTarget(self, action: #selector(Tap), for: .touchUpInside)
     }
     
    
     
     @objc func Tap() {
-        self.delegate?.didTapTabButton(for: self.page)
+        delegate?.didTapTabButton(for: buttonPage)
     }
+}
+
+extension TabButton {
+    
+    public func attributes(at tabPage: TabPage) -> (position: CGFloat, color: UIColor) {
+        switch buttonPage {
+        case .one:
+            switch tabPage {
+            case .one:
+                return (position: tabCenter, color: buttonPage.visible)
+            case .two:
+                return (position: lhs, color: buttonPage.faded)
+            case .three:
+                return (position: offLeft, color: buttonPage.hidden)
+            case .four:
+                return (position: offLeft, color: buttonPage.hidden)
+            case .five:
+                return (position: offLeft, color: buttonPage.hidden)
+            }
+        case .two:
+            switch tabPage {
+            case .one:
+                return (position: rhs, color: buttonPage.faded)
+            case .two:
+                return (position: tabCenter, color: buttonPage.visible)
+            case .three:
+                return (position: lhs, color: buttonPage.faded)
+            case .four:
+                return (position: offLeft, color: buttonPage.hidden)
+            case .five:
+                return (position: offLeft, color: buttonPage.hidden)
+            }
+        case .three:
+            switch tabPage {
+            case .one:
+                return (position: offRight, color: buttonPage.hidden)
+            case .two:
+                return (position: rhs, color: buttonPage.faded)
+            case .three:
+                return (position: tabCenter, color: buttonPage.visible)
+            case .four:
+                return (position: lhs, color: buttonPage.faded)
+            case .five:
+                return (position: offLeft, color: buttonPage.hidden)
+            }
+        case .four:
+            switch tabPage {
+            case .one:
+                return (position: offRight, color: buttonPage.hidden)
+            case .two:
+                return (position: offRight, color: buttonPage.hidden)
+            case .three:
+                return (position: rhs, color: buttonPage.faded)
+            case .four:
+                return (position: tabCenter, color: buttonPage.visible)
+            case .five:
+                return (position: lhs, color: buttonPage.faded)
+            }
+        case .five:
+            switch tabPage {
+            case .one:
+                return (position: offRight, color: buttonPage.hidden)
+            case .two:
+                return (position: offRight, color: buttonPage.hidden)
+            case .three:
+                return (position: offRight, color: buttonPage.hidden)
+            case .four:
+                return (position: rhs, color: buttonPage.faded)
+            case .five:
+                return (position: tabCenter, color: buttonPage.visible)
+            }
+        }
+    }
+    
 }
 
 
@@ -148,19 +236,19 @@ extension TabButton {
     }
     
     public var width: CGFloat {
-        return self.bounds.width
+        return bounds.width
     }
     
     public var height: CGFloat {
-        return self.bounds.height
+        return bounds.height
     }
     
     public var halfOfWidth: CGFloat {
-        return self.width.divided(by: 2)
+        return width.divided(by: 2)
     }
     
     public var halfOfHeight: CGFloat {
-        return self.height.divided(by: 2)
+        return height.divided(by: 2)
     }
     
     private var screenWidth: CGFloat {
@@ -168,66 +256,66 @@ extension TabButton {
     }
     
     public var tabCenterY: CGFloat {
-        return self.tabViewHeight.divided(by: 2)
+        return tabViewHeight.divided(by: 2)
     }
     
     public var tabCenterX: CGFloat {
-        switch self.page {
+        switch buttonPage {
         case .one:
-            return self.lhs
+            return offLeft
         case .two:
-            return self.tabCenter
+            return lhs
         case .three:
-            return self.rhs
+            return tabCenter
         case .four:
-            return self.offRight
+            return rhs
         case .five:
-            return self.centerRight
+            return offRight
         }
     }
     
     public var farLeft: CGFloat {
-        return -(self.screenWidth - (self.halfOfWidth + self.margin))
+        return -(screenWidth - (halfOfWidth + margin))
     }
     
     public var centerLeft: CGFloat {
-        return -(self.screenWidth.divided(by: 2).subtracting(self.halfOfWidth))
+        return -(screenWidth.divided(by: 2).subtracting(halfOfWidth))
     }
     
     public var offLeft: CGFloat {
-        return -(self.margin.adding(self.halfOfWidth))
+        return -(margin.adding(halfOfWidth))
     }
     
     public var lhs: CGFloat {
-        return self.margin.adding(self.halfOfWidth)
+        return margin.adding(halfOfWidth)
     }
     
     public var tabCenter: CGFloat {
-        return self.screenWidth.divided(by: 2)
+        return screenWidth.divided(by: 2)
     }
     
     public var rhs: CGFloat {
-        return self.screenWidth.subtracting(self.margin.adding(self.halfOfWidth))
+        return screenWidth.subtracting(margin.adding(halfOfWidth))
     }
     
     public var offRight: CGFloat {
-        return self.screenWidth.adding(self.margin.adding(self.halfOfWidth))
+        return screenWidth.adding(margin.adding(halfOfWidth))
     }
     
     public var centerRight: CGFloat {
-        return self.screenWidth.adding(self.screenWidth.divided(by: 2).subtracting(self.halfOfWidth))
+        return screenWidth.adding(screenWidth.divided(by: 2).subtracting(halfOfWidth))
     }
     
     public var farRight: CGFloat {
-        return self.screenWidth.multiplied(by: 2).subtracting(self.margin.adding(self.halfOfWidth))
+        return screenWidth.multiplied(by: 2).subtracting(margin.adding(halfOfWidth))
     }
     
     public var farOffRight: CGFloat {
-        return self.screenWidth.multiplied(by: 2).adding(self.margin.adding(self.halfOfWidth))
+        return screenWidth.multiplied(by: 2).adding(margin.adding(halfOfWidth))
     }
     
     public var farCenterRight: CGFloat {
-        return self.screenWidth.multiplied(by: 2) + self.screenWidth.divided(by: 2) + self.halfOfWidth
+        return screenWidth.multiplied(by: 2) + screenWidth.divided(by: 2) + halfOfWidth
     }
 }
 
