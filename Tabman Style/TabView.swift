@@ -76,7 +76,6 @@ final class TabView: UIView {
     
     private var fiveRhsToCenter: Interpolate?
     
-    
     public weak var delegate: TabViewDelegate?
     
     override init(frame: CGRect) {
@@ -139,73 +138,73 @@ extension TabView {
     }
 
     private func configurePage3to2() {
-        oneOffLeftToLhs = Interpolate(from: one.center.x, to: one.lhs, apply: { [weak self] (newPosition) in
+        oneOffLeftToLhs = Interpolate(from: one.offLeft, to: one.lhs, apply: { [weak self] (newPosition) in
             self?.one.center.x = newPosition
         })
-        twoLhsToCenter = Interpolate(from: two.center.x, to: two.tabCenter, apply: { [weak self] (newPosition) in
+        twoLhsToCenter = Interpolate(from: two.lhs, to: two.tabCenter, apply: { [weak self] (newPosition) in
             self?.two.center.x = newPosition
         })
-        threeCenterToRhs = Interpolate(from: three.center.x, to: three.rhs, apply: { [weak self] (newPosition) in
+        threeCenterToRhs = Interpolate(from: three.tabCenter, to: three.rhs, apply: { [weak self] (newPosition) in
             self?.three.center.x = newPosition
         })
-        fourRhsToOffRight = Interpolate(from: four.center.x, to: four.offRight, apply: { [weak self] (newPosition) in
+        fourRhsToOffRight = Interpolate(from: four.rhs, to: four.offRight, apply: { [weak self] (newPosition) in
             self?.four.center.x = newPosition
         })
-        fiveOffRightToCenterRight = Interpolate(from: five.center.x, to: five.centerRight, apply: { [weak self] (newPosition) in
+        fiveOffRightToCenterRight = Interpolate(from: five.offRight, to: five.centerRight, apply: { [weak self] (newPosition) in
             self?.five.center.x = newPosition
         })
     }
     
     private func configurePage2to1() {
-        oneLhsToCenter = Interpolate(from: one.center.x, to: one.tabCenter, apply: { [weak self] (newPosition) in
+        oneLhsToCenter = Interpolate(from: one.lhs, to: one.tabCenter, apply: { [weak self] (newPosition) in
             self?.one.center.x = newPosition
         })
-        twoCenterToRhs = Interpolate(from: two.center.x, to: two.rhs, apply: { [weak self] (newPosition) in
+        twoCenterToRhs = Interpolate(from: two.tabCenter, to: two.rhs, apply: { [weak self] (newPosition) in
             self?.two.center.x = newPosition
         })
-        threeRhsToOffRight = Interpolate(from: three.center.x, to: three.offRight, apply: { [weak self] (newPosition) in
+        threeRhsToOffRight = Interpolate(from: three.rhs, to: three.offRight, apply: { [weak self] (newPosition) in
             self?.three.center.x = newPosition
         })
-        fourOffRightToCenterRight = Interpolate(from: four.center.x, to: four.centerRight, apply: { [weak self] (newPosition) in
+        fourOffRightToCenterRight = Interpolate(from: four.offRight, to: four.centerRight, apply: { [weak self] (newPosition) in
             self?.four.center.x = newPosition
         })
-        fiveCenterRightToFarRight = Interpolate(from: five.center.x, to: five.farRight, apply: { [weak self] (newPosition) in
+        fiveCenterRightToFarRight = Interpolate(from: five.centerRight, to: five.farRight, apply: { [weak self] (newPosition) in
             self?.five.center.x = newPosition
         })
     }
     
     private func configurePage3to4() {
-        oneOffLhsToCenterLeft = Interpolate(from: one.center.x, to: one.centerLeft, apply: { [weak self] (newPosition) in
+        oneOffLhsToCenterLeft = Interpolate(from: one.offLeft, to: one.centerLeft, apply: { [weak self] (newPosition) in
             self?.one.center.x = newPosition
         })
-        twoLhsToOffLeft = Interpolate(from: two.center.x, to: two.offLeft, apply: { [weak self] (newPosition) in
+        twoLhsToOffLeft = Interpolate(from: two.lhs, to: two.offLeft, apply: { [weak self] (newPosition) in
             self?.two.center.x = newPosition
         })
-        threeCenterToLhs = Interpolate(from: three.center.x, to: three.lhs, apply: { [weak self] (newPosition) in
+        threeCenterToLhs = Interpolate(from: three.tabCenter, to: three.lhs, apply: { [weak self] (newPosition) in
             self?.three.center.x = newPosition
         })
-        fourRhsToCenter = Interpolate(from: four.center.x, to: four.tabCenter, apply: { [weak self] (newPosition) in
+        fourRhsToCenter = Interpolate(from: four.rhs, to: four.tabCenter, apply: { [weak self] (newPosition) in
             self?.four.center.x = newPosition
         })
-        fiveOffRightToRhs = Interpolate(from: five.center.x, to: five.rhs, apply: { [weak self] (newPosition) in
+        fiveOffRightToRhs = Interpolate(from: five.offRight, to: five.rhs, apply: { [weak self] (newPosition) in
             self?.five.center.x = newPosition
         })
     }
     
     private func configurePage4to5() {
-        oneCenterLeftToFarLeft = Interpolate(from: one.center.x, to: one.farLeft, apply: { [weak self] (newPosition) in
+        oneCenterLeftToFarLeft = Interpolate(from: one.centerLeft, to: one.farLeft, apply: { [weak self] (newPosition) in
             self?.one.center.x = newPosition
         })
-        twoOffLeftToCenterLeft = Interpolate(from: two.center.x, to: two.centerLeft, apply: { [weak self] (newPosition) in
+        twoOffLeftToCenterLeft = Interpolate(from: two.offLeft, to: two.centerLeft, apply: { [weak self] (newPosition) in
             self?.two.center.x = newPosition
         })
-        threeLhsToOffLeft = Interpolate(from: three.center.x, to: three.offLeft, apply: { [weak self] (newPosition) in
+        threeLhsToOffLeft = Interpolate(from: three.lhs, to: three.offLeft, apply: { [weak self] (newPosition) in
             self?.three.center.x = newPosition
         })
-        fourCenterToLhs = Interpolate(from: four.center.x, to: four.lhs, apply: { [weak self] (newPosition) in
+        fourCenterToLhs = Interpolate(from: four.tabCenter, to: four.lhs, apply: { [weak self] (newPosition) in
             self?.four.center.x = newPosition
         })
-        fiveRhsToCenter = Interpolate(from: five.center.x, to: five.tabCenter, apply: { [weak self] (newPosition) in
+        fiveRhsToCenter = Interpolate(from: five.rhs, to: five.tabCenter, apply: { [weak self] (newPosition) in
             self?.five.center.x = newPosition
         })
     }
