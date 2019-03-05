@@ -28,6 +28,43 @@ final class TabView: UIView {
     
     private lazy var five = TabButton()
     
+    /// PAGE 2 TO 1
+    
+    private var oneToCenter: Interpolate?
+    
+    private var twoToRhs: Interpolate?
+    
+    private var threeToOffRight: Interpolate?
+    
+    /// PAGE 3 to 2
+    
+    private var oneToLhs: Interpolate?
+    
+    private var twoToCenter: Interpolate?
+    
+    private var threeToRhs: Interpolate?
+    
+    private var fourToOffRight: Interpolate?
+    
+    /// PAGE 3 to 4
+    
+    private var twoToOffLeft: Interpolate?
+    
+    private var threeToLhs: Interpolate?
+    
+    private var fourToCenter: Interpolate?
+    
+    private var fiveToRhs: Interpolate?
+    
+    /// PAGE 4 to 5
+    
+    private var threeToOffLeft: Interpolate?
+    
+    private var fourToLhs: Interpolate?
+    
+    private var fiveToCenter: Interpolate?
+    
+    
     private var pageTwoToOne: UIViewPropertyAnimator?
     
     private var pageThreeToTwo: UIViewPropertyAnimator?
@@ -98,6 +135,19 @@ extension TabView {
     }
 
     private func configurePage2to1() {
+        oneToCenter = Interpolate(from: one.center.x, to: one.attributes(at: .one).position, apply: { [weak self] (newPosition) in
+            self?.one.center.x = newPosition
+        })
+        
+        twoToRhs = Interpolate(from: two.center.x, to: two.attributes(at: .one).position, apply: { [weak self] (newPosition) in
+            self?.two.center.x = newPosition
+        })
+        
+
+        threeToOffRight = Interpolate(from: three.center.x, to: three.attributes(at: .one).position, apply: { [weak self] (newPosition) in
+            self?.three.center.x = newPosition
+        })
+        
         pageTwoToOne = UIViewPropertyAnimator()
         if #available(iOS 11.0, *) {
             pageTwoToOne?.pausesOnCompletion = true
@@ -112,6 +162,22 @@ extension TabView {
     }
     
     private func configurePage3to2() {
+        oneToLhs = Interpolate(from: one.center.x, to: one.attributes(at: .two).position, apply: { [weak self] (newPosition) in
+            self?.one.center.x = newPosition
+        })
+        
+        twoToCenter = Interpolate(from: two.center.x, to: two.attributes(at: .two).position, apply: { [weak self] (newPosition) in
+            self?.two.center.x = newPosition
+        })
+        
+        threeToRhs = Interpolate(from: three.center.x, to: three.attributes(at: .two).position, apply: { [weak self] (newPosition) in
+            self?.three.center.x = newPosition
+        })
+        
+        fourToOffRight = Interpolate(from: four.center.x, to: four.attributes(at: .two).position, apply: { [weak self] (newPosition) in
+            self?.four.center.x = newPosition
+        })
+        
         pageThreeToTwo = UIViewPropertyAnimator()
         if #available(iOS 11.0, *) {
             pageThreeToTwo?.pausesOnCompletion = true
@@ -126,6 +192,21 @@ extension TabView {
     }
     
     private func configurePage3to4() {
+        twoToOffLeft = Interpolate(from: two.center.x, to: two.attributes(at: .four).position, apply: { [weak self] (newPosition) in
+            self?.two.center.x = newPosition
+        })
+        
+        threeToLhs = Interpolate(from: three.center.x, to: three.attributes(at: .four).position, apply: { [weak self] (newPosition) in
+            self?.three.center.x = newPosition
+        })
+        
+        fourToCenter = Interpolate(from: four.center.x, to: four.attributes(at: .four).position, apply: { [weak self] (newPosition) in
+            self?.four.center.x = newPosition
+        })
+        
+        fiveToRhs = Interpolate(from: five.center.x, to: five.attributes(at: .four).position, apply: { [weak self] (newPosition) in
+            self?.five.center.x = newPosition
+        })
         pageThreeToFour = UIViewPropertyAnimator()
         if #available(iOS 11.0, *) {
             pageThreeToFour?.pausesOnCompletion = true
@@ -140,6 +221,17 @@ extension TabView {
     }
     
     private func configurePage4to5() {
+        threeToOffLeft = Interpolate(from: three.center.x, to: three.attributes(at: .five).position, apply: { [weak self] (newPosition) in
+            self?.three.center.x = newPosition
+        })
+        
+        fourToLhs = Interpolate(from: four.center.x, to: four.attributes(at: .five).position, apply: { [weak self] (newPosition) in
+            self?.four.center.x = newPosition
+        })
+        
+        fiveToCenter = Interpolate(from: five.center.x, to: five.attributes(at: .five).position, apply: { [weak self] (newPosition) in
+            self?.five.center.x = newPosition
+        })
         pageFourToFive = UIViewPropertyAnimator()
         if #available(iOS 11.0, *) {
             pageFourToFive?.pausesOnCompletion = true
@@ -167,27 +259,42 @@ extension TabView: PageboyViewControllerDelegate {
     public func pageboyViewController(_ pageboyViewController: PageboyViewController, didScrollTo position: CGPoint, direction: PageboyViewController.NavigationDirection, animated: Bool) {
         
         self.isUserInteractionEnabled = position.x < 1 ? false : true
-        Log.verbose(position.x)
+        //Log.verbose(position.x)
         let progressTo1 = 1 - position.x
         let progressTo2 = 2 - position.x
         let progressTo4 = position.x - 2
         let progressTo5 = position.x - 3
-        Log.info(progressTo1)
-        Log.debug(progressTo2)
-        Log.warning(progressTo4)
-        Log.error(progressTo5)
 
         if progressTo1 >= 0 && position.x <= 1 {
-            pageTwoToOne?.fractionComplete = progressTo1
+            Log.info(progressTo1)
+            //pageTwoToOne?.fractionComplete = progressTo1
+            oneToCenter?.progress = progressTo1
+            twoToRhs?.progress = progressTo1
+            threeToOffRight?.progress = progressTo1
         }
         if progressTo2 >= 0 && position.x >= 1 && position.x <= 2 {
-            pageThreeToTwo?.fractionComplete = progressTo2
+            Log.debug(progressTo2)
+            //pageThreeToTwo?.fractionComplete = progressTo2
+            oneToLhs?.progress = progressTo2
+            twoToCenter?.progress = progressTo2
+            threeToRhs?.progress = progressTo2
+            fourToOffRight?.progress = progressTo2
         }
         if progressTo4 >= 0 && position.x >= 2 && position.x <= 3 {
-           pageThreeToFour?.fractionComplete = progressTo4
+            Log.warning(progressTo4)
+           //pageThreeToFour?.fractionComplete = progressTo4
+            /*twoToOffLeft?.progress = progressTo4
+            threeToLhs?.progress = progressTo4
+            fourToCenter?.progress = progressTo4
+            fiveToRhs?.progress = progressTo4*/
+            
         }
         if progressTo5 >= 0 && position.x >= 3 && position.x <= 4 {
-            pageFourToFive?.fractionComplete = progressTo5
+            Log.error(progressTo5)
+           // pageFourToFive?.fractionComplete = progressTo5
+            /*threeToOffLeft?.progress = progressTo5
+            fourToLhs?.progress = progressTo5
+            fiveToCenter?.progress = progressTo5*/
         }
     }
     
