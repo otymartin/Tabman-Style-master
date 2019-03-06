@@ -81,11 +81,11 @@ public enum TabPage: CaseIterable {
     }
     
     public var faded: UIColor {
-        return UIColor.black.withAlphaComponent(0.4)
+        return UIColor.dark.withAlphaComponent(0.4)
     }
     
     public var visible: UIColor {
-        return .black
+        return .dark
     }
 }
 
@@ -134,7 +134,6 @@ final class TabButton: UIButton {
 extension TabButton {
     
     private func configure() {
-        setTitleColor(.black, for: .normal)
         titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .heavy)
         addTarget(self, action: #selector(Tap), for: .touchUpInside)
     }

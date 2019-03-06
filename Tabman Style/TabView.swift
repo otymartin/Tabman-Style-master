@@ -32,11 +32,19 @@ final class TabView: UIView {
     
     private var oneOffLeftToLhs: Interpolate?
     
+    private var oneOffLeftToLhsColor: Interpolate?
+    
     private var twoLhsToCenter: Interpolate?
+    
+    private var twoLhsToCenterColor: Interpolate?
     
     private var threeCenterToRhs: Interpolate?
     
+    private var threeCenterToRhsColor: Interpolate?
+    
     private var fourRhsToOffRight: Interpolate?
+    
+    private var fourRhsToOffRightColor: Interpolate?
     
     private var fiveOffRightToCenterRight: Interpolate?
     
@@ -44,9 +52,15 @@ final class TabView: UIView {
     
     private var oneLhsToCenter: Interpolate?
     
+    private var oneLhsToCenterColor: Interpolate?
+    
     private var twoCenterToRhs: Interpolate?
     
+    private var twoCenterToRhsColor: Interpolate?
+    
     private var threeRhsToOffRight: Interpolate?
+    
+    private var threeRhsToOffRightColor: Interpolate?
     
     private var fourOffRightToCenterRight: Interpolate?
     
@@ -58,11 +72,19 @@ final class TabView: UIView {
     
     private var twoLhsToOffLeft: Interpolate?
     
+    private var twoLhsToOffLeftColor: Interpolate?
+    
     private var threeCenterToLhs: Interpolate?
+    
+    private var threeCenterToLhsColor: Interpolate?
     
     private var fourRhsToCenter: Interpolate?
     
+    private var fourRhsToCenterColor: Interpolate?
+    
     private var fiveOffRightToRhs: Interpolate?
+    
+    private var fiveOffRightToRhsColor: Interpolate?
     
     /// PAGE 4 to 5
     
@@ -72,9 +94,15 @@ final class TabView: UIView {
     
     private var threeLhsToOffLeft: Interpolate?
     
+    private var threeLhsToOffLeftColor: Interpolate?
+    
     private var fourCenterToLhs: Interpolate?
     
+    private var fourCenterToLhsColor: Interpolate?
+    
     private var fiveRhsToCenter: Interpolate?
+    
+    private var fiveRhsToCenterColor: Interpolate?
     
     public weak var delegate: TabViewDelegate?
     
@@ -153,6 +181,19 @@ extension TabView {
         fiveOffRightToCenterRight = Interpolate(from: five.offRight, to: five.centerRight, apply: { [weak self] (newPosition) in
             self?.five.center.x = newPosition
         })
+        
+        oneOffLeftToLhsColor = Interpolate(from: one.buttonPage.hidden, to: one.buttonPage.faded, apply: { [weak self] (newColor) in
+            self?.one.setTitleColor(newColor, for: .normal)
+        })
+        twoLhsToCenterColor = Interpolate(from: two.buttonPage.faded, to: two.buttonPage.visible, apply: { [weak self] (newColor) in
+            self?.two.setTitleColor(newColor, for: .normal)
+        })
+        threeCenterToRhsColor = Interpolate(from: three.buttonPage.visible, to: three.buttonPage.faded, apply: { [weak self] (newColor) in
+            self?.three.setTitleColor(newColor, for: .normal)
+        })
+        fourRhsToOffRightColor = Interpolate(from: four.buttonPage.faded, to: four.buttonPage.hidden, apply: { [weak self] (newColor) in
+            self?.four.setTitleColor(newColor, for: .normal)
+        })
     }
     
     private func configurePage2to1() {
@@ -170,6 +211,15 @@ extension TabView {
         })
         fiveCenterRightToFarRight = Interpolate(from: five.centerRight, to: five.farRight, apply: { [weak self] (newPosition) in
             self?.five.center.x = newPosition
+        })
+        oneLhsToCenterColor = Interpolate(from: one.buttonPage.faded, to: one.buttonPage.visible, apply: { [weak self] (newColor) in
+            self?.one.setTitleColor(newColor, for: .normal)
+        })
+        twoCenterToRhsColor = Interpolate(from: two.buttonPage.visible, to: two.buttonPage.faded, apply: { [weak self] (newColor) in
+            self?.two.setTitleColor(newColor, for: .normal)
+        })
+        threeRhsToOffRightColor = Interpolate(from: three.buttonPage.faded, to: three.buttonPage.hidden, apply: { [weak self] (newColor) in
+            self?.three.setTitleColor(newColor, for: .normal)
         })
     }
     
@@ -189,6 +239,18 @@ extension TabView {
         fiveOffRightToRhs = Interpolate(from: five.offRight, to: five.rhs, apply: { [weak self] (newPosition) in
             self?.five.center.x = newPosition
         })
+        twoLhsToOffLeftColor = Interpolate(from: two.buttonPage.faded, to: two.buttonPage.hidden, apply: { [weak self] (newColor) in
+            self?.two.setTitleColor(newColor, for: .normal)
+        })
+        threeCenterToLhsColor = Interpolate(from: three.buttonPage.visible, to: three.buttonPage.faded, apply: { [weak self] (newColor) in
+            self?.three.setTitleColor(newColor, for: .normal)
+        })
+        fourRhsToCenterColor = Interpolate(from: four.buttonPage.faded, to: four.buttonPage.visible, apply: { [weak self] (newColor) in
+            self?.four.setTitleColor(newColor, for: .normal)
+        })
+        fiveOffRightToRhsColor = Interpolate(from: five.buttonPage.hidden, to: four.buttonPage.faded, apply: { [weak self] (newColor) in
+            self?.five.setTitleColor(newColor, for: .normal)
+        })
     }
     
     private func configurePage4to5() {
@@ -206,6 +268,15 @@ extension TabView {
         })
         fiveRhsToCenter = Interpolate(from: five.rhs, to: five.tabCenter, apply: { [weak self] (newPosition) in
             self?.five.center.x = newPosition
+        })
+        threeLhsToOffLeftColor = Interpolate(from: three.buttonPage.faded, to: three.buttonPage.hidden, apply: { [weak self] (newColor) in
+            self?.three.setTitleColor(newColor, for: .normal)
+        })
+        fourCenterToLhsColor = Interpolate(from: four.buttonPage.visible, to: four.buttonPage.faded, apply: { [weak self] (newColor) in
+            self?.four.setTitleColor(newColor, for: .normal)
+        })
+        fiveRhsToCenterColor = Interpolate(from: five.buttonPage.faded, to: five.buttonPage.visible, apply: { [weak self] (newColor) in
+            self?.five.setTitleColor(newColor, for: .normal)
         })
     }
 }
@@ -234,6 +305,9 @@ extension TabView: PageboyViewControllerDelegate {
             threeRhsToOffRight?.progress = progressTo1
             fourOffRightToCenterRight?.progress = progressTo1
             fiveCenterRightToFarRight?.progress = progressTo1
+            oneLhsToCenterColor?.progress = progressTo1
+            twoCenterToRhsColor?.progress = progressTo1
+            threeRhsToOffRightColor?.progress = progressTo1
         }
         if progressTo2 >= 0 && position.x >= 1 && position.x <= 2 {
             Log.debug(progressTo2)
@@ -242,6 +316,10 @@ extension TabView: PageboyViewControllerDelegate {
             threeCenterToRhs?.progress = progressTo2
             fourRhsToOffRight?.progress = progressTo2
             fiveOffRightToCenterRight?.progress = progressTo2
+            oneOffLeftToLhsColor?.progress = progressTo2
+            twoLhsToCenterColor?.progress = progressTo2
+            threeCenterToRhsColor?.progress = progressTo2
+            fourRhsToOffRightColor?.progress = progressTo2
         }
         if progressTo4 >= 0 && position.x >= 2 && position.x <= 3 {
             Log.warning(progressTo4)
@@ -250,6 +328,10 @@ extension TabView: PageboyViewControllerDelegate {
             threeCenterToLhs?.progress = progressTo4
             fourRhsToCenter?.progress = progressTo4
             fiveOffRightToRhs?.progress = progressTo4
+            twoLhsToOffLeftColor?.progress = progressTo4
+            threeCenterToLhsColor?.progress = progressTo4
+            fourRhsToCenterColor?.progress = progressTo4
+            fiveOffRightToRhsColor?.progress = progressTo4
         }
         if progressTo5 >= 0 && position.x >= 3 && position.x <= 4 {
             Log.error(progressTo5)
@@ -258,6 +340,9 @@ extension TabView: PageboyViewControllerDelegate {
             threeLhsToOffLeft?.progress = progressTo5
             fourCenterToLhs?.progress = progressTo5
             fiveRhsToCenter?.progress = progressTo5
+            threeLhsToOffLeftColor?.progress = progressTo5
+            fourCenterToLhsColor?.progress = progressTo5
+            fiveRhsToCenterColor?.progress = progressTo5
         }
     }
     
@@ -286,4 +371,11 @@ extension TabView: PageboyViewControllerDelegate {
         }*/
     }
     
+}
+
+extension UIColor {
+    
+    class var dark: UIColor {
+        return UIColor(red:0.24, green:0.23, blue:0.24, alpha:1.0)
+    }
 }
