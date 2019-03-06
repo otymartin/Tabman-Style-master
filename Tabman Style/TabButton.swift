@@ -16,6 +16,7 @@
 
 import UIKit
 import Pageboy
+import Interpolate
 
 public enum TabPage: CaseIterable {
     case one
@@ -57,12 +58,12 @@ public enum TabPage: CaseIterable {
     
     public var initialTextColor: UIColor {
         switch self {
-        case .one:
-            return self.faded
-        case .two:
-            return self.visible
-        case .three, .four, .five:
-            return self.faded
+        case .one, .five:
+            return hidden
+        case .two, .four:
+            return faded
+        case .three:
+            return visible
         }
     }
     
@@ -72,23 +73,6 @@ public enum TabPage: CaseIterable {
             return self.faded
         default:
             return self.hidden
-        }
-    }
-    
-    public enum Text {
-        case hidden
-        case faded
-        case visible
-        
-        public var color: UIColor {
-            switch self {
-            case .hidden:
-                return .clear
-            case .faded:
-               return UIColor.black.withAlphaComponent(0.4)
-            case .visible:
-                return .black
-            }
         }
     }
     
@@ -115,11 +99,19 @@ protocol TabButtonDelegate: class {
 
 final class TabButton: UIButton {
     
+    private var leftIconLabel: UILabel?
+    
+    private var rightIconLabel: UILabel?
+    
+    private var hopOneAlpha: Interpolate?
+    
+    private var hopTwoAlpha: Interpolate?
+    
     public weak var delegate: TabButtonDelegate?
     
     public var buttonPage: TabPage = .one {
         didSet {
-            setTitle(buttonPage.title, for: .normal)
+            configure(for: buttonPage)
         }
     }
     
@@ -131,6 +123,11 @@ final class TabButton: UIButton {
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    
+    @objc func Tap() {
+        delegate?.didTapTabButton(for: buttonPage)
+    }
 
 }
 
@@ -138,16 +135,98 @@ extension TabButton {
     
     private func configure() {
         setTitleColor(.black, for: .normal)
-        setTitleColor(buttonPage.initialTextColor, for: .normal)
-        titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .heavy)
+        titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .heavy)
         addTarget(self, action: #selector(Tap), for: .touchUpInside)
     }
     
-   
-    
-    @objc func Tap() {
-        delegate?.didTapTabButton(for: buttonPage)
+    private func configure(for page: TabPage) {
+        setTitle(buttonPage.title, for: .normal)
+        setTitleColor(buttonPage.initialTextColor, for: .normal)
+        switch buttonPage {
+            case .four, .five:
+                print("")
+                //addIconLabels()
+            default:
+                break
+         }
     }
+    
+   /*private func addIconLabels() {
+        leftIconLabel = UILabel()
+        leftIconLabel?.alpha = 0
+        leftIconLabel?.font = UIFont.systemFont(ofSize: 17, weight: .heavy)
+        leftIconLabel?.isUserInteractionEnabled = false
+        leftIconLabel?.textColor = buttonPage.initialIconColor
+        guard let leftIconLabel = leftIconLabel else { return }
+        addSubview(leftIconLabel)
+        leftIconLabel.snp.makeConstraints { [weak self] (make) in
+            guard let view = self else { return }
+            make.leading.equalTo(view.snp.leading)
+            make.centerY.equalTo(view.snp.centerY)
+        }
+        
+        rightIconLabel = UILabel()
+        rightIconLabel?.alpha = 0.4
+        rightIconLabel?.font = UIFont.systemFont(ofSize: 17, weight: .heavy)
+        rightIconLabel?.isUserInteractionEnabled = false
+        rightIconLabel?.textColor = buttonPage.initialIconColor
+        guard let rightIconLabel = rightIconLabel else { return }
+        addSubview(rightIconLabel)
+        rightIconLabel.snp.makeConstraints { [weak self] (make) in
+            guard let view = self else { return }
+            make.trailing.equalTo(view.snp.trailing)
+            make.centerY.equalTo(view.snp.centerY)
+        }
+        
+        //self.configureInterpolations()
+    }*/
+    
+    /*private func configureInterpolations() {
+        
+        hopOneAlpha = Interpolate(from: 0.4, to: 0 , apply: { [weak self] (alpha) in
+            self?.rightIconLabel?.alpha = alpha
+        })
+        
+        hopTwoAlpha = Interpolate(from: self.page == .three ? CGFloat(0) : 0.4, to: self.page == .three ? 0.4 : 0, apply: { [weak self] (alpha) in
+            guard let page = self?.page else { return }
+            switch page {
+            case .three:
+                self?.leftIconLabel?.alpha = alpha
+            case .four:
+                self?.rightIconLabel?.alpha = alpha
+            default:
+                break
+            }
+        })
+        
+        hopThreeAlpha = Interpolate(from: self.page == .four ? CGFloat(0) : 0.4, to: self.page == .four ? 0.4 : 0, apply: { [weak self] (alpha) in
+            guard let page = self?.page else { return }
+            switch page {
+            case .four:
+                self?.leftIconLabel?.alpha = alpha
+            case .five:
+                self?.rightIconLabel?.alpha = alpha
+            default:
+                break
+            }
+        })
+    }*/
+}
+
+extension TabButton {
+    
+    /*public func set(_ title: String, with icon: Icon? = nil) {
+        if let icon = icon {
+            let leftTitle = title.attributed(with: icon, iconColor: .messageGray, font: UIFont.systemFont(ofSize: 17, weight: .heavy), position: .left)
+            let rightTitle = title.attributed(with: icon, iconColor: .messageGray, font: UIFont.systemFont(ofSize: 17, weight: .heavy), position: .right)
+            self.leftIconLabel?.attributedText = leftTitle
+            self.rightIconLabel?.attributedText = rightTitle
+        } else {
+            let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17, weight: .heavy), NSAttributedString.Key.foregroundColor: UIColor.dark]
+            self.leftIconLabel?.attributedText = NSAttributedString(string: String(title.reversed()), attributes: attributes)
+            self.rightIconLabel?.attributedText = NSAttributedString(string: title, attributes: attributes)
+        }
+    }*/
 }
 
 extension TabButton {

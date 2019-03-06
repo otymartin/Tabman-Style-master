@@ -24,6 +24,5 @@ public class PageViewController: UIViewController {
     open override func viewDidLoad() {
         super.viewDidLoad()
         self.title = page.title
-        self.view.backgroundColor = page.color
     }
 }
