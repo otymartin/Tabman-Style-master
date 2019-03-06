@@ -151,6 +151,14 @@ extension TabView {
             button.sizeToFit()
             button.center.x = button.tabCenterX
             button.center.y = button.tabCenterY
+            switch button.buttonPage {
+            case .four:
+                button.set("43", with: UIIcon.imageOfInvitationCardSmall())
+            case .five:
+                button.set("3", with: UIIcon.imageOfVerificationIcon())
+            default:
+                break
+            }
         }
         configureInterpolations()
     }
@@ -283,23 +291,22 @@ extension TabView {
 
 extension TabView: PageboyViewControllerDelegate {
     
-    func pageboyViewController(_ pageboyViewController: PageboyViewController, didReloadWith currentViewController: UIViewController, currentPageIndex: PageboyViewController.PageIndex) {
-        
-    }
+    public func pageboyViewController(_ pageboyViewController: PageboyViewController, didReloadWith currentViewController: UIViewController, currentPageIndex: PageboyViewController.PageIndex) {}
     
-    func pageboyViewController(_ pageboyViewController: PageboyViewController, willScrollToPageAt index: PageboyViewController.PageIndex, direction: PageboyViewController.NavigationDirection, animated: Bool) {
-        
-    }
+    public func pageboyViewController(_ pageboyViewController: PageboyViewController, willScrollToPageAt index: PageboyViewController.PageIndex, direction: PageboyViewController.NavigationDirection, animated: Bool) {}
     
     public func pageboyViewController(_ pageboyViewController: PageboyViewController, didScrollTo position: CGPoint, direction: PageboyViewController.NavigationDirection, animated: Bool) {
-        //self.isUserInteractionEnabled = position.x < 1 ? false : true
+        four.pageboyViewController(pageboyViewController, didScrollTo: position, direction: direction, animated: animated)
+        five.pageboyViewController(pageboyViewController, didScrollTo: position, direction: direction, animated: animated)
+
+       //isUserInteractionEnabled = position.x < 1 ? false : true
+        
         let progressTo1 = 1 - position.x
         let progressTo2 = 2 - position.x
         let progressTo4 = position.x - 2
         let progressTo5 = position.x - 3
 
         if progressTo1 >= 0 && position.x <= 1 {
-            Log.info(progressTo1)
             oneLhsToCenter?.progress = progressTo1
             twoCenterToRhs?.progress = progressTo1
             threeRhsToOffRight?.progress = progressTo1
@@ -310,7 +317,6 @@ extension TabView: PageboyViewControllerDelegate {
             threeRhsToOffRightColor?.progress = progressTo1
         }
         if progressTo2 >= 0 && position.x >= 1 && position.x <= 2 {
-            Log.debug(progressTo2)
             oneOffLeftToLhs?.progress = progressTo2
             twoLhsToCenter?.progress = progressTo2
             threeCenterToRhs?.progress = progressTo2
@@ -322,7 +328,6 @@ extension TabView: PageboyViewControllerDelegate {
             fourRhsToOffRightColor?.progress = progressTo2
         }
         if progressTo4 >= 0 && position.x >= 2 && position.x <= 3 {
-            Log.warning(progressTo4)
             oneOffLhsToCenterLeft?.progress = progressTo4
             twoLhsToOffLeft?.progress = progressTo4
             threeCenterToLhs?.progress = progressTo4
@@ -334,7 +339,6 @@ extension TabView: PageboyViewControllerDelegate {
             fiveOffRightToRhsColor?.progress = progressTo4
         }
         if progressTo5 >= 0 && position.x >= 3 && position.x <= 4 {
-            Log.error(progressTo5)
             oneCenterLeftToFarLeft?.progress = progressTo5
             twoOffLeftToCenterLeft?.progress = progressTo5
             threeLhsToOffLeft?.progress = progressTo5
@@ -347,8 +351,11 @@ extension TabView: PageboyViewControllerDelegate {
     }
     
     public func pageboyViewController(_ pageboyViewController: PageboyViewController, didScrollToPageAt index: Int, direction: PageboyViewController.NavigationDirection, animated: Bool) {
+        four.pageboyViewController(pageboyViewController, didScrollToPageAt: index, direction: direction, animated: animated)
+        five.pageboyViewController(pageboyViewController, didScrollToPageAt: index, direction: direction, animated: animated)
+
+        //isUserInteractionEnabled = index == 0 ? false : true
         
-        isUserInteractionEnabled = index == 0 ? false : true
         /*
         switch index {
         case 1:

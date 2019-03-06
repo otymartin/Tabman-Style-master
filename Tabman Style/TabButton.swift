@@ -28,15 +28,15 @@ public enum TabPage: CaseIterable {
     public var title: String {
         switch self {
         case .one:
-            return "One"
+            return PageTitle.account
         case .two:
-            return "Two"
+            return PageTitle.profile
         case .three:
-            return "Three"
+            return PageTitle.people
         case .four:
-            return "Four"
+            return PageTitle.invitations
         case .five:
-            return "Five"
+            return PageTitle.verification
         }
     }
     
@@ -87,6 +87,17 @@ public enum TabPage: CaseIterable {
     public var visible: UIColor {
         return .dark
     }
+    
+    public var icon: Icon? {
+        switch self {
+        case .four:
+            return IconImage.invitationCardSmall
+        case .five:
+            return IconImage.verificationIcon
+        default:
+            return nil
+        }
+    }
 }
 
 import UIKit
@@ -99,13 +110,13 @@ protocol TabButtonDelegate: class {
 
 final class TabButton: UIButton {
     
-    private var leftIconLabel: UILabel?
-    
-    private var rightIconLabel: UILabel?
-    
     private var hopOneAlpha: Interpolate?
     
     private var hopTwoAlpha: Interpolate?
+    
+    private lazy var leftIconLabel = UILabel()
+    
+    private lazy var rightIconLabel = UILabel()
     
     public weak var delegate: TabButtonDelegate?
     
@@ -143,20 +154,19 @@ extension TabButton {
         setTitleColor(buttonPage.initialTextColor, for: .normal)
         switch buttonPage {
             case .four, .five:
-                print("")
-                //addIconLabels()
+                addIconLabels()
+                set("0", with: buttonPage.icon)
             default:
                 break
          }
     }
     
-   /*private func addIconLabels() {
+   private func addIconLabels() {
         leftIconLabel = UILabel()
-        leftIconLabel?.alpha = 0
-        leftIconLabel?.font = UIFont.systemFont(ofSize: 17, weight: .heavy)
-        leftIconLabel?.isUserInteractionEnabled = false
-        leftIconLabel?.textColor = buttonPage.initialIconColor
-        guard let leftIconLabel = leftIconLabel else { return }
+        leftIconLabel.alpha = 0
+        leftIconLabel.font = UIFont.systemFont(ofSize: 17, weight: .heavy)
+        leftIconLabel.isUserInteractionEnabled = false
+        leftIconLabel.textColor = buttonPage.initialIconColor
         addSubview(leftIconLabel)
         leftIconLabel.snp.makeConstraints { [weak self] (make) in
             guard let view = self else { return }
@@ -165,11 +175,10 @@ extension TabButton {
         }
         
         rightIconLabel = UILabel()
-        rightIconLabel?.alpha = 0.4
-        rightIconLabel?.font = UIFont.systemFont(ofSize: 17, weight: .heavy)
-        rightIconLabel?.isUserInteractionEnabled = false
-        rightIconLabel?.textColor = buttonPage.initialIconColor
-        guard let rightIconLabel = rightIconLabel else { return }
+        rightIconLabel.alpha = 0.4
+        rightIconLabel.font = UIFont.systemFont(ofSize: 17, weight: .heavy)
+        rightIconLabel.isUserInteractionEnabled = false
+        rightIconLabel.textColor = buttonPage.initialIconColor
         addSubview(rightIconLabel)
         rightIconLabel.snp.makeConstraints { [weak self] (make) in
             guard let view = self else { return }
@@ -177,44 +186,32 @@ extension TabButton {
             make.centerY.equalTo(view.snp.centerY)
         }
         
-        //self.configureInterpolations()
-    }*/
+        self.configureInterpolations()
+    }
     
-    /*private func configureInterpolations() {
+    private func configureInterpolations() {
         
         hopOneAlpha = Interpolate(from: 0.4, to: 0 , apply: { [weak self] (alpha) in
-            self?.rightIconLabel?.alpha = alpha
+            self?.rightIconLabel.alpha = alpha
         })
         
-        hopTwoAlpha = Interpolate(from: self.page == .three ? CGFloat(0) : 0.4, to: self.page == .three ? 0.4 : 0, apply: { [weak self] (alpha) in
-            guard let page = self?.page else { return }
-            switch page {
-            case .three:
-                self?.leftIconLabel?.alpha = alpha
-            case .four:
-                self?.rightIconLabel?.alpha = alpha
-            default:
-                break
-            }
-        })
-        
-        hopThreeAlpha = Interpolate(from: self.page == .four ? CGFloat(0) : 0.4, to: self.page == .four ? 0.4 : 0, apply: { [weak self] (alpha) in
-            guard let page = self?.page else { return }
+        hopTwoAlpha = Interpolate(from: buttonPage == .four ? CGFloat(0) : 0.4, to: buttonPage == .four ? 0.4 : 0, apply: { [weak self] (alpha) in
+            guard let page = self?.buttonPage else { return }
             switch page {
             case .four:
-                self?.leftIconLabel?.alpha = alpha
+                self?.leftIconLabel.alpha = alpha
             case .five:
-                self?.rightIconLabel?.alpha = alpha
+                self?.rightIconLabel.alpha = alpha
             default:
                 break
             }
         })
-    }*/
+    }
 }
 
 extension TabButton {
     
-    /*public func set(_ title: String, with icon: Icon? = nil) {
+    public func set(_ title: String, with icon: Icon? = nil) {
         if let icon = icon {
             let leftTitle = title.attributed(with: icon, iconColor: .messageGray, font: UIFont.systemFont(ofSize: 17, weight: .heavy), position: .left)
             let rightTitle = title.attributed(with: icon, iconColor: .messageGray, font: UIFont.systemFont(ofSize: 17, weight: .heavy), position: .right)
@@ -222,10 +219,87 @@ extension TabButton {
             self.rightIconLabel?.attributedText = rightTitle
         } else {
             let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17, weight: .heavy), NSAttributedString.Key.foregroundColor: UIColor.dark]
-            self.leftIconLabel?.attributedText = NSAttributedString(string: String(title.reversed()), attributes: attributes)
-            self.rightIconLabel?.attributedText = NSAttributedString(string: title, attributes: attributes)
+            self.leftIconLabel.attributedText = NSAttributedString(string: String(title.reversed()), attributes: attributes)
+            self.rightIconLabel.attributedText = NSAttributedString(string: title, attributes: attributes)
         }
-    }*/
+    }
+}
+
+extension TabButton: PageboyViewControllerDelegate {
+    
+    public func pageboyViewController(_ pageboyViewController: PageboyViewController, didScrollTo position: CGPoint, direction: PageboyViewController.NavigationDirection, animated: Bool) {
+        
+        let progressTo4 = position.x - 2
+        let progressTo5 = position.x - 3
+        
+        if progressTo4 >= 0 && position.x >= 2 && position.x <= 3 {
+            switch buttonPage {
+            case .four, .five:
+                hopOneAlpha?.progress = progressTo4
+            default:
+                break
+            }
+        }
+        if progressTo5 >= 0 && position.x >= 3 && position.x <= 4 {
+            switch buttonPage {
+            case .four, .five:
+                hopTwoAlpha?.progress = progressTo5
+            default:
+                break
+            }
+        }
+    }
+    
+    public func pageboyViewController(_ pageboyViewController: PageboyViewController, didScrollToPageAt index: PageboyViewController.PageIndex, direction: PageboyViewController.NavigationDirection, animated: Bool) {
+        switch index {
+        case 1:
+            switch buttonPage {
+            case .three:
+                self.leftIconLabel.alpha = 0
+            default:
+                break
+            }
+        case 2:
+            switch buttonPage {
+            case .three:
+                self.leftIconLabel.alpha = 0
+                self.rightIconLabel.alpha = 0
+            case .four:
+                self.leftIconLabel.alpha = 0
+            default:
+                break
+            }
+        case 3:
+            switch buttonPage {
+            case .three:
+                self.rightIconLabel.alpha = 0
+            case .four:
+                self.leftIconLabel.alpha = 0
+                self.rightIconLabel.alpha = 0
+            case .five:
+                self.leftIconLabel.alpha = 0
+            default:
+                break
+            }
+        case 4:
+            switch buttonPage {
+            case .four:
+                self.rightIconLabel.alpha = 0
+            case .five:
+                self.leftIconLabel.alpha = 0
+                self.rightIconLabel.alpha = 0
+            default:
+                break
+            }
+        default:
+            break
+        }
+    }
+    
+    public func pageboyViewController(_ pageboyViewController: PageboyViewController, willScrollToPageAt index: PageboyViewController.PageIndex, direction: PageboyViewController.NavigationDirection, animated: Bool) {}
+   
+    public func pageboyViewController(_ pageboyViewController: PageboyViewController, didReloadWith currentViewController: UIViewController, currentPageIndex: PageboyViewController.PageIndex) {}
+    
 }
 
 extension TabButton {
@@ -321,7 +395,6 @@ extension TabButton {
         return screenWidth.multiplied(by: 2) + screenWidth.divided(by: 2) + halfOfWidth
     }
 }
-
 
 public extension CGFloat {
     
